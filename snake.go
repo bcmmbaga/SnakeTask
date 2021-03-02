@@ -2,6 +2,7 @@ package snaketask
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/JoelOtter/termloop"
 )
@@ -77,6 +78,11 @@ func (s *Snake) Draw(screen *termloop.Screen) {
 
 	s.scoreText.Draw(screen)
 
+	if s.selfCollissionCheck() || s.BorderCollisionCheck() {
+		fmt.Printf("Your score: %d", s.score)
+		os.Exit(1)
+	}
+
 	for _, coord := range s.coords {
 		screen.RenderCell(
 			coord.x, coord.y, &termloop.Cell{
@@ -117,4 +123,18 @@ func (s *Snake) Collide(collision termloop.Physical) {
 		s.score++
 		s.scoreText.SetText(fmt.Sprintf("Score: %d", s.score))
 	}
+}
+
+func (s *Snake) selfCollissionCheck() bool {
+	for i := 0; i < len(s.coords)-1; i++ {
+		if s.coords[len(s.coords)-1] == s.coords[i] {
+			return true
+		}
+	}
+	return false
+}
+
+func (s *Snake) BorderCollisionCheck() bool {
+	_, ok := board.coords[s.coords[len(s.coords)-1]]
+	return !ok
 }
