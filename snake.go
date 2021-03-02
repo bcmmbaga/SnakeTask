@@ -1,6 +1,8 @@
 package snaketask
 
 import (
+	"fmt"
+
 	"github.com/JoelOtter/termloop"
 )
 
@@ -21,7 +23,8 @@ type Snake struct {
 	coords []coordinate
 
 	// number of food units eaten
-	score int
+	score     int
+	scoreText *termloop.Text
 
 	// length of the snake
 	len int
@@ -32,16 +35,16 @@ type Snake struct {
 // NewSnake return new Snake with default coordinate and length.
 func NewSnake() *Snake {
 	snake := new(Snake)
-	snake.Entity = termloop.NewEntity(5, 5, 1, 1)
-	x, y := 282/2, 69/2
+	snake.Entity = termloop.NewEntity(1, 1, 1, 1)
 	snake.coords = []coordinate{
-		{x: x + 1, y: y},
-		{x: x + 2, y: y},
-		{x: x + 3, y: y},
+		{x: 1, y: 4},
+		{x: 2, y: 4},
+		{x: 3, y: 4},
 	}
 
 	snake.len = len(snake.coords)
 	snake.direction = right
+	snake.scoreText = termloop.NewText(1, 1, "Score: 0", termloop.ColorBlack, termloop.ColorWhite)
 
 	return snake
 }
@@ -50,6 +53,7 @@ func (s *Snake) Draw(screen *termloop.Screen) {
 	if s == nil {
 		return
 	}
+
 	headCoord := s.coords[len(s.coords)-1]
 
 	switch s.direction {
@@ -70,6 +74,8 @@ func (s *Snake) Draw(screen *termloop.Screen) {
 	}
 
 	s.SetPosition(headCoord.x, headCoord.y)
+
+	s.scoreText.Draw(screen)
 
 	for _, coord := range s.coords {
 		screen.RenderCell(
@@ -101,5 +107,14 @@ func (s *Snake) Tick(event termloop.Event) {
 				s.direction = down
 			}
 		}
+	}
+}
+
+func (s *Snake) Collide(collision termloop.Physical) {
+	switch collision.(type) {
+	case *Food:
+		s.len += 3
+		s.score++
+		s.scoreText.SetText(fmt.Sprintf("Score: %d", s.score))
 	}
 }
