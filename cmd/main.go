@@ -1,27 +1,19 @@
 package main
 
 import (
-	"github.com/JoelOtter/termloop"
+	"flag"
+
 	"github.com/bcmmbaga/snaketask"
 )
 
+var (
+	width  = flag.Int("width", 80, "game board width")
+	height = flag.Int("height", 30, "game board height")
+)
+
 func main() {
-	baseLevel := termloop.NewBaseLevel(termloop.Cell{
-		Bg: termloop.ColorDefault,
-	})
+	flag.Parse()
 
-	var (
-		board = snaketask.NewBoard(80, 30)
-		snake = snaketask.NewSnake()
-		food  = snaketask.NewFood()
-	)
-	baseLevel.AddEntity(board)
-	baseLevel.AddEntity(snake)
-	baseLevel.AddEntity(food)
+	snaketask.Start(*width, *height)
 
-	g := termloop.NewGame()
-
-	g.Screen().SetLevel(baseLevel)
-	g.Screen().SetFps(10)
-	g.Start()
 }

@@ -9,6 +9,11 @@ import (
 
 type direction int
 
+// coordinate represents location of the snake on the board.
+type coordinate struct {
+	x, y int
+}
+
 const (
 	right direction = iota
 	left
@@ -24,7 +29,9 @@ type Snake struct {
 	coords []coordinate
 
 	// number of food units eaten
-	score     int
+	score int
+
+	// score board
 	scoreText *termloop.Text
 
 	// length of the snake
@@ -33,8 +40,8 @@ type Snake struct {
 	direction direction
 }
 
-// NewSnake return new Snake with default coordinate and length.
-func NewSnake() *Snake {
+// newSnake return new Snake with default coordinate and length.
+func newSnake() *Snake {
 	snake := new(Snake)
 	snake.Entity = termloop.NewEntity(1, 1, 1, 1)
 	snake.coords = []coordinate{
@@ -78,7 +85,7 @@ func (s *Snake) Draw(screen *termloop.Screen) {
 
 	s.scoreText.Draw(screen)
 
-	if s.selfCollissionCheck() || s.BorderCollisionCheck() {
+	if s.selfCollissionCheck() || s.borderCollisionCheck() {
 		fmt.Printf("Your score: %d", s.score)
 		os.Exit(1)
 	}
@@ -134,7 +141,7 @@ func (s *Snake) selfCollissionCheck() bool {
 	return false
 }
 
-func (s *Snake) BorderCollisionCheck() bool {
+func (s *Snake) borderCollisionCheck() bool {
 	_, ok := board.coords[s.coords[len(s.coords)-1]]
 	return !ok
 }

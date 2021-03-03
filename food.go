@@ -11,7 +11,7 @@ type Food struct {
 	coord coordinate
 }
 
-func NewFood() *Food {
+func newFood() *Food {
 	f := new(Food)
 	f.Entity = termloop.NewEntity(1, 1, 1, 1)
 	f.shiftToNewPosition()
@@ -25,7 +25,7 @@ func (f *Food) Draw(screen *termloop.Screen) {
 	}
 
 	screen.RenderCell(f.coord.x, f.coord.y, &termloop.Cell{
-		Fg: termloop.ColorGreen,
+		Fg: termloop.ColorRed,
 		Ch: '■',
 	})
 }
