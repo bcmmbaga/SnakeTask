@@ -4,7 +4,7 @@
 ```code
 ➜  [~] git clone https://github.com/bcmmbaga/SnakeTask snake
 ➜  [~] cd snake &&  go build -o snake cmd/main.go
-➜  [snake] ./snake
+➜  [snake] ./snake or ./snake --width {value} --height {value}
 ```
 
 # Additional Information
